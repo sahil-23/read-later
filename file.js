@@ -1,4 +1,5 @@
 chrome.storage.sync.get(null,function(items){
+	//console.log(items) ;
 	var ol = document.getElementById("list") ;
 	for (var k in items)
 	{

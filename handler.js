@@ -2,7 +2,8 @@
 	var feed_item = document.getElementsByClassName("feed_item");
 
 	var count = feed_item.length;
-	for(var i=0;i<count;i++)
+	var i ;
+	for(i=0;i<count;i++)
 	{
 		var url=feed_item[i].getElementsByClassName("timestamp")[0].getElementsByTagName('a')[0].getAttribute("href");
 		if(feed_item[i].getElementsByClassName("link_text").length!=0) {
@@ -22,12 +23,18 @@
 		tag.appendChild(bullet); tag.appendChild(read_later); 
 		read_later.addEventListener('click',addToList,false);
 	}
+	alert(count-i) ;
 
 
 function addToList(e){
-	var element=e.target; var key=element.getAttribute("url");
-	var val=[element.getAttribute("q"),key];
-	var pair={}; pair[key]=val; 
-	chrome.storage.sync.set(pair,function (){element.firstChild.nodeValue='Added To List'; element.removeAttribute('href');});
-	e.preventDefault(); element.removeEventListener('click',addToList,false); 
+	var element=e.target;    var key=element.getAttribute("url");
+	chrome.storage.sync.get(key, function(item){
+		if(JSON.stringify(item)=="{}"){
+			var val=[element.getAttribute("q"),key];
+			var pair={}; pair[key]=val; 
+			chrome.storage.sync.set(pair,function (){element.firstChild.nodeValue='Added To List'; element.removeAttribute('href');});
+			element.removeEventListener('click',addToList,false); 	
+		}
+	})
+	e.preventDefault();
 }
